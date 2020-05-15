@@ -2,12 +2,14 @@
   <div
     :id="`panel-${panel.id}`"
     :class="tileClasses"
+    :style="{ zIndex: panel.zIndex }"
     ref="tile"
     draggable="true"
     @dragstart="dragStart"
     @drag="drag"
     @dragend="dragEnd"
     @click="toggleActive"
+    @mousedown="showOnTop"
   >
     <header>
       Tile {{ panel.id }}
@@ -63,26 +65,20 @@ export default class extends Vue {
    */
   mounted(): void {
     document.addEventListener('click', this.deselect)
-    this.loadTileCoords()
-    this.loadTileSize()
+    this.loadTileParams()
   }
 
   /**
-   * @method loadTileCoords restores last page coords of tile from local storage
+   * @method loadTileParams restores last page coords, last known size of tile
+   * from local storage
    */
-  loadTileCoords(): void {
+  loadTileParams() {
     const { tile } = this.$refs
     tile.style.left = this.panel.posX + 'px'
     tile.style.top = this.panel.posY + 'px'
-  }
-
-  /**
-   * @method loadTileSize restores last known tile size from local storage
-   */
-  loadTileSize(): void {
-    const { tile } = this.$refs
     tile.style.width = this.panel.width + 'px'
     tile.style.height = this.panel.height + 'px'
+    tile.style.zIndex = this.panel.zIndex
   }
 
   /**
@@ -110,6 +106,13 @@ export default class extends Vue {
    */
   toggleActive(): void {
     this.$store.dispatch('toggleActive', this.panel.id)
+  }
+
+  /**
+   * Selected tile bubbles on top while rest go underneath
+   */
+  showOnTop(): void {
+    this.$store.dispatch('showOnTop', this.panel.id)
   }
 
   /**

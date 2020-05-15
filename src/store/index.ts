@@ -12,11 +12,19 @@ export default new Vuex.Store({
     resizing: false
   },
   getters: {
-    panels: (state) => state.panels
+    panels: (state) => state.panels,
+    panelById: (state, panelId) => state.panels.find(panel => panel.id == panelId)
   },
   mutations: {
     loadPanels(state) {
       state.panels = PanelsService.load()
+    },
+    showOnTop(state, panelId: number) {
+      const matchedPanel = state.panels.find(panel => panel.id == panelId)
+      state.panels.forEach(panel => {
+        panel.zIndex = 1
+      })
+      matchedPanel.zIndex = 2
     },
     markPanelActive(state, panelId: number) {
       state.panels.forEach(panel => {
@@ -47,6 +55,9 @@ export default new Vuex.Store({
   actions: {
     loadPanels(store) {
       store.commit('loadPanels')
+    },
+    showOnTop(store, panelId: number) {
+      store.commit('showOnTop', panelId)
     },
     toggleActive(store, panelId: number) {
       store.commit('markPanelActive', panelId)

@@ -59,19 +59,30 @@ export default class extends Vue {
 
   /**
    * Detect click on blank screen immediately when component is mounted
+   * Load tile params
    */
   mounted(): void {
     document.addEventListener('click', this.deselect)
     this.loadTileCoords()
+    this.loadTileSize()
   }
 
   /**
-   * @method loadTileCoords restores last page coords from local storage
+   * @method loadTileCoords restores last page coords of tile from local storage
    */
   loadTileCoords(): void {
     const { tile } = this.$refs
     tile.style.left = this.panel.posX + 'px'
     tile.style.top = this.panel.posY + 'px'
+  }
+
+  /**
+   * @method loadTileSize restores last known tile size from local storage
+   */
+  loadTileSize(): void {
+    const { tile } = this.$refs
+    tile.style.width = this.panel.width + 'px'
+    tile.style.height = this.panel.height + 'px'
   }
 
   /**

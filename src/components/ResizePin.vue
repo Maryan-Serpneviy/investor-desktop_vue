@@ -42,8 +42,14 @@ export default class extends Vue {
    */
   private resizeEnd(event: any): void {
     const shift = this.calculateShift(event.pageX, event.pageY)
-    this.tile.style.width = this.tile.offsetWidth + shift.x + 'px'
-    this.tile.style.height = this.tile.offsetHeight + shift.y + 'px'
+    this.tile.style.width = this.tile.clientWidth + shift.x + 'px'
+    this.tile.style.height = this.tile.clientHeight + shift.y + 'px'
+
+    this.$store.dispatch('saveTileSize', {
+      id: this.panelId,
+      width: this.tile.clientWidth,
+      height: this.tile.clientHeight
+    })
 
     setTimeout(() => {
       this.$store.dispatch('toggleResize', false)
@@ -51,7 +57,7 @@ export default class extends Vue {
   }
 
   /**
-   * @method calculatesShift or distance in pixels between two points:
+   * @method calculateShift or distance in pixels between two points:
    * where resize was triggered and where it was over
    * @param {number} endCoordX hand over the resize event endpoint on X axis
    * @param {number} endCoordY hand over the resize event endpoint on Y axis

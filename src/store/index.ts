@@ -30,7 +30,7 @@ export default new Vuex.Store({
         panel.active = false
       })
     },
-    switchResizingState(state, status: boolean) {
+    changeResizingState(state, status: boolean) {
       state.resizing = status
     },
     savePanelPosition(state, payload: { id: number; x: number; y: number }) {
@@ -39,7 +39,9 @@ export default new Vuex.Store({
       matchedPanel.posY = payload.y
     },
     savePanelSize(state, payload: { id: number; width: number; height: number }) {
-      //
+      const matchedPanel = state.panels.find(panel => panel.id == payload.id)
+      matchedPanel.width = payload.width
+      matchedPanel.height = payload.height
     }
   },
   actions: {
@@ -55,7 +57,7 @@ export default new Vuex.Store({
       return true
     },
     toggleResize(store, status: boolean) {
-      store.commit('switchResizingState', status)
+      store.commit('changeResizingState', status)
       return true
     },
     saveTileCoords(store, payload: { id: number; x: number; y: number }) {
@@ -65,6 +67,8 @@ export default new Vuex.Store({
     },
     saveTileSize(store, payload: { id: number; width: number; height: number }) {
       store.commit('savePanelSize', payload)
+      PanelsService.save(store.state.panels)
+      return true
     }
   },
   modules: {

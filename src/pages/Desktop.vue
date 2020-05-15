@@ -4,9 +4,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import Tile from '@/components/Tile'
+import Tile from '@/components/Tile.vue'
 
 @Component({
   name: 'Desktop',
@@ -15,6 +15,10 @@ import Tile from '@/components/Tile'
   }
 })
 export default class extends Vue {
+  created() {
+    this.$store.dispatch('loadPanels')
+  }
+
   get panels() {
     return this.$store.getters.panels
   }

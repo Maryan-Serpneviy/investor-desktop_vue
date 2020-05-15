@@ -18,7 +18,13 @@
     </div>
 
     <div v-if="panel.active">
-      <resize-pin v-for="pin in pins" :key="pin" :position="pin" :tile="$refs.tile" />
+      <resize-pin
+        v-for="pin in pins"
+        :key="pin"
+        :position="pin"
+        :panelId="panel.id"
+        :tile="$refs.tile"
+      />
     </div>
   </div>
 </template>
@@ -40,11 +46,6 @@ export default class extends Vue {
   @Prop() panel!: Panel
 
   /**
-   * holds last known position on screen of current tile
-   * @constructs Coordinate creates object with x and y axis coords
-   */
-  private startCoords = new Coordinate(0, 0)
-  /**
    * holds screen coords where drag was started
    * @constructs Coordinate creates object with x and y axis coords
    */
@@ -52,7 +53,7 @@ export default class extends Vue {
 
   /**
    * holds array of constants which will be transformed
-   * and respective resize markers will be rendered
+   * and corresponding resize markers will be rendered
    */
   private pins: Array<string> = PIN_POSITIONS
 
@@ -61,9 +62,13 @@ export default class extends Vue {
    */
   mounted(): void {
     document.addEventListener('click', this.deselect)
+    this.loadTileCoords()
   }
 
-  restoreTilePosition() {
+  /**
+   * @method loadTileCoords restores last page coords from local storage
+   */
+  loadTileCoords(): void {
     const { tile } = this.$refs
     tile.style.left = this.panel.posX + 'px'
     tile.style.top = this.panel.posY + 'px'
@@ -92,7 +97,7 @@ export default class extends Vue {
    * Make resize pin(s) show up (only on active tile)
    * Drop previous selection
    */
-  toggleActive() {
+  toggleActive(): void {
     this.$store.dispatch('toggleActive', this.panel.id)
   }
 
@@ -117,7 +122,7 @@ export default class extends Vue {
   /**
    * @method dragStart captures and stores screen coords where drag was started
    */
-  private dragStart(event: any) {
+  private dragStart(event: any): void {
     this.pageCoords = new Coordinate(event.pageX, event.pageY)
   }
 
@@ -126,26 +131,27 @@ export default class extends Vue {
    * @constructs Coordinate shift - a diff between start event coords and cursor.
    * Updates panel's coordinates
    */
-  private drag(event: any) {
+  private drag(event: any): void {
     if (this.resizing) return
     const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
-    event.target.style.left = this.startCoords.x + shift.x + 'px'
-    event.target.style.top = this.startCoords.y + shift.y + 'px'
+    event.target.style.left = this.panel.posX + shift.x + 'px'
+    event.target.style.top = this.panel.posY + shift.y + 'px'
   }
 
   /**
    * @method drag only executes if resize isn't toggled
    * @constructs Coordinate shift - a diff between start event coords and cursor.
    * Updates panel's coordinates
-   * Stores last known panel position in startCoords field
+   * Sends tile page coords to the store
    */
-  private dragEnd(event: any) {
+  private dragEnd(event: any): void {
     if (this.resizing) return
     const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
-    event.target.style.left = this.startCoords.x + shift.x + 'px'
-    event.target.style.top = this.startCoords.y + shift.y + 'px';
-    // remember last panel position
-    this.startCoords = new Coordinate(parseInt(event.target.style.left), parseInt(event.target.style.top))
+    event.target.style.left = this.panel.posX + shift.x + 'px'
+    event.target.style.top = this.panel.posY + shift.y + 'px'
+
+    const lastCoords = new Coordinate(parseInt(event.target.style.left), parseInt(event.target.style.top))
+    this.$store.dispatch('saveTileCoords', { id: this.panel.id, ...lastCoords })
   }
 }
 </script>

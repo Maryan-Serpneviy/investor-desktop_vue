@@ -5,11 +5,6 @@ import { APP_PREFIX } from '@/core/config'
 const PANELS = `${APP_PREFIX}/panels`
 
 export class PanelsService {
-  panels: Array<Panel>
-  constructor(panels: Array<Panel>) {
-    this.panels = panels
-  }
-
   static save(payload: Array<Panel>) {
     try {
       const serializedPanels = JSON.stringify(payload)

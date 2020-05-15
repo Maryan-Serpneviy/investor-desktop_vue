@@ -7,13 +7,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    panels: PanelsService.load() as Array<Panel>,
+    panels: [] as [] | Array<Panel>,
+    deleted: [] as [] | Array<Panel>,
     resizing: false
   },
   getters: {
     panels: (state) => state.panels
   },
   mutations: {
+    loadPanels(state) {
+      state.panels = PanelsService.load()
+    },
     markPanelActive(state, panelId: number) {
       state.panels.forEach(panel => {
         panel.active = false
@@ -28,9 +32,20 @@ export default new Vuex.Store({
     },
     switchResizingState(state, status: boolean) {
       state.resizing = status
+    },
+    savePanelPosition(state, payload: { id: number; x: number; y: number }) {
+      const matchedPanel = state.panels.find(panel => panel.id == payload.id)
+      matchedPanel.posX = payload.x
+      matchedPanel.posY = payload.y
+    },
+    savePanelSize(state, payload: { id: number; width: number; height: number }) {
+      //
     }
   },
   actions: {
+    loadPanels(store) {
+      store.commit('loadPanels')
+    },
     toggleActive(store, panelId: number) {
       store.commit('markPanelActive', panelId)
       return true
@@ -42,6 +57,14 @@ export default new Vuex.Store({
     toggleResize(store, status: boolean) {
       store.commit('switchResizingState', status)
       return true
+    },
+    saveTileCoords(store, payload: { id: number; x: number; y: number }) {
+      store.commit('savePanelPosition', payload)
+      PanelsService.save(store.state.panels)
+      return true
+    },
+    saveTileSize(store, payload: { id: number; width: number; height: number }) {
+      store.commit('savePanelSize', payload)
     }
   },
   modules: {

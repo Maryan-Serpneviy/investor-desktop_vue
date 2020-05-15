@@ -14,6 +14,7 @@ import { Coordinate } from '@/core/constructors'
 
 @Component
 export default class extends Vue {
+  @Prop({ required: true }) panelId!: number
   @Prop({ required: true }) position!: string
   @Prop({ required: true }) tile!: Element
 
@@ -29,7 +30,7 @@ export default class extends Vue {
    * Informs a store that resizing is triggered so that tile position
    * couldn't change during drag event in Tile component
    */
-  private resizeStart(event: any) {
+  private resizeStart(event: any): void {
     this.startCoords = new Coordinate(event.pageX, event.pageY)
     this.$store.dispatch('toggleResize', true)
   }
@@ -39,7 +40,7 @@ export default class extends Vue {
    * Use setTimeout with zero delay to throw function in the end of call stack
    * to prevent the 'dragend' event trigger and tile coords change
    */
-  private resizeEnd(event: any) {
+  private resizeEnd(event: any): void {
     const shift = this.calculateShift(event.pageX, event.pageY)
     this.tile.style.width = this.tile.offsetWidth + shift.x + 'px'
     this.tile.style.height = this.tile.offsetHeight + shift.y + 'px'
@@ -68,6 +69,8 @@ export default class extends Vue {
         return new Coordinate(this.startCoords.x - endCoordX, 0)
       case 'right':
         return new Coordinate(endCoordX - this.startCoords.x, 0)
+      default:
+        return new Coordinate(0, 0)
     }
   }
 }

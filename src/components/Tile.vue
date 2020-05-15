@@ -1,0 +1,191 @@
+<template>
+  <div
+    :id="`panel-${panel.id}`"
+    :class="tileClasses"
+    ref="tile"
+    draggable="true"
+    @dragstart="dragStart"
+    @drag="drag"
+    @dragend="dragEnd"
+    @click="toggleActive"
+  >
+    <header>
+      Tile {{ panel.id }}
+      <span class="close">&times;</span>
+    </header>
+    <div class="panel-content">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi iusto id alias illo numquam ut delectus, sit, non harum quas molestias temporibus
+    </div>
+
+    <div v-if="panel.active">
+      <resize-pin v-for="pin in pins" :key="pin" :position="pin" :tile="$refs.tile" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Coordinate } from '@/core/constructors'
+import { PIN_POSITIONS } from '@/core/config'
+import { Panel } from '@/types/interfaces'
+import ResizePin from './ResizePin.vue'
+
+@Component({
+  components: {
+    ResizePin
+  }
+})
+export default class extends Vue {
+  @Prop() panel!: Panel
+
+  /**
+   * holds last known position on screen of current tile
+   * @constructs Coordinate creates object with x and y axis coords
+   */
+  private startCoords = new Coordinate(0, 0)
+  /**
+   * holds screen coords where drag was started
+   * @constructs Coordinate creates object with x and y axis coords
+   */
+  private pageCoords = new Coordinate(0, 0)
+
+  /**
+   * holds array of constants which will be transformed
+   * and respective resize markers will be rendered
+   */
+  private pins: Array<string> = PIN_POSITIONS
+
+  /**
+   * Detect click on blank screen immediately when component is mounted
+   */
+  mounted(): void {
+    document.addEventListener('click', this.deselect)
+  }
+
+  restoreTilePosition() {
+    const { tile } = this.$refs
+    tile.style.left = this.panel.posX + 'px'
+    tile.style.top = this.panel.posY + 'px'
+  }
+
+  /**
+   * Clean-up the listener that detects click on blank screen
+   * when leaving "desktop" (tiles) page
+   */
+  beforeDestroy(): void {
+    document.removeEventListener('click', this.deselect)
+  }
+
+  /**
+   * Detects click on blank screen.
+   * Condition is truthy if target html structure is less complex than el > el
+   */
+  deselect(event: any): void {
+    if (event.path.length < 8) {
+      this.$store.dispatch('cancelSelection')
+    }
+  }
+
+  /**
+   * Inform the store that current tile becomes active.
+   * Make resize pin(s) show up (only on active tile)
+   * Drop previous selection
+   */
+  toggleActive() {
+    this.$store.dispatch('toggleActive', this.panel.id)
+  }
+
+  /**
+   * computed @method panelClasses generates class depending on whether
+   * current tile is active or not
+   * @returns {string} - merged css classes
+   */
+  get tileClasses(): string {
+    const status = this.panel.active ? 'panel_active' : 'panel_inactive'
+    return `panel ${status}`
+  }
+
+  /**
+   * computed @method resizing
+   * @returns {boolean} information from store about resize state
+   */
+  get resizing(): boolean {
+    return this.$store.state.resizing
+  }
+
+  /**
+   * @method dragStart captures and stores screen coords where drag was started
+   */
+  private dragStart(event: any) {
+    this.pageCoords = new Coordinate(event.pageX, event.pageY)
+  }
+
+  /**
+   * @method drag only executes if resize isn't toggled
+   * @constructs Coordinate shift - a diff between start event coords and cursor.
+   * Updates panel's coordinates
+   */
+  private drag(event: any) {
+    if (this.resizing) return
+    const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
+    event.target.style.left = this.startCoords.x + shift.x + 'px'
+    event.target.style.top = this.startCoords.y + shift.y + 'px'
+  }
+
+  /**
+   * @method drag only executes if resize isn't toggled
+   * @constructs Coordinate shift - a diff between start event coords and cursor.
+   * Updates panel's coordinates
+   * Stores last known panel position in startCoords field
+   */
+  private dragEnd(event: any) {
+    if (this.resizing) return
+    const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
+    event.target.style.left = this.startCoords.x + shift.x + 'px'
+    event.target.style.top = this.startCoords.y + shift.y + 'px';
+    // remember last panel position
+    this.startCoords = new Coordinate(parseInt(event.target.style.left), parseInt(event.target.style.top))
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.panel {
+  border: 1px solid #ccc;
+  margin-bottom: 25px;
+  background-color: #f7f7f7;
+  overflow: hidden;
+  position: relative;
+  width: 300px;
+  height: 100px;
+  min-width: 100px;
+  min-height: 50px;
+
+  header {
+    background-color: #eee;
+    border-bottom: 1px solid #ccc;
+    color: #222;
+    height: 20px;
+    padding-top: 5px;
+  }
+}
+
+.panel-content {
+  padding: 15px;
+}
+
+.panel_active {
+  outline: 2px dashed #ccc;
+  z-index: 2;
+}
+
+.panel_inactive {
+  outline: none;
+  z-index: 1;
+}
+
+.close {
+  padding: 5px;
+}
+</style>

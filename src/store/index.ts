@@ -9,7 +9,9 @@ export default new Vuex.Store({
   state: {
     panels: [] as [] | Array<Panel>,
     deleted: [] as [] | Array<Panel>,
-    resizing: false
+    resizing: false,
+
+    transactions: []
   },
   getters: {
     panels: (state) => state.panels,

@@ -37,7 +37,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style scoped>
 * {
   padding: 0;
   margin: 0;
@@ -51,7 +51,9 @@ export default class extends Vue {
   justify-content: space-evenly;
   overflow: hidden;
 }
-// remove transition
+
+/* remove transition */
+
 .remove-enter-active {
   animation: remove-in 0.35s ease-out;
 }
@@ -62,7 +64,7 @@ export default class extends Vue {
 
 @keyframes remove-in {
   from {
-    transform: translateY(120vw) scale(0.4);
+    transform: translateY(120vw) scale(0);
   }
   to {
     transform: translateY(0px) scale(1);
@@ -77,7 +79,9 @@ export default class extends Vue {
     transform: translateY(120vw) scale(0.4);
   }
 }
-// pop transition
+
+/* pop transition */
+
 .pop-enter-active {
   animation: pop-in 0.5s ease-in-out;
 }

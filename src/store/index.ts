@@ -55,11 +55,24 @@ export default new Vuex.Store({
         matched.height = payload.height
       }
     },
-    moveToDeleted(state, id) {
+    moveToDeleted(state, id: number) {
       const matched = state.panels.find(panel => panel.id == id)
       const matchedIndex = state.panels.indexOf(matched)
       const deleted = state.panels.splice(matchedIndex, 1)[0]
+
       state.deleted.push(deleted)
+    },
+    moveFromDeleted(state, id: number) {
+      const matched = state.deleted.find(panel => panel.id == id)
+      const matchedIndex = state.deleted.indexOf(matched)
+      const restored = state.deleted.splice(matchedIndex, 1)[0]
+
+      restored.width = 300
+      restored.height = 100
+      restored.posX = 0
+      restored.posY = 0
+
+      state.panels.push(restored)
     }
   },
   actions: {
@@ -86,8 +99,11 @@ export default new Vuex.Store({
       store.commit('savePanelSize', payload)
       PanelsService.save(store.state.panels)
     },
-    removeTile(store, id) {
+    removeTile(store, id: number) {
       store.commit('moveToDeleted', id)
+    },
+    restoreTile(store, id: number) {
+      store.commit('moveFromDeleted', id)
     }
   },
   modules: {

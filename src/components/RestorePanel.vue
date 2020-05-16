@@ -6,6 +6,7 @@
         class="removed-panel"
         v-for="(panel) in removed"
         :key="panel.id"
+        @click="restoreTile(panel.id)"
       >Tile {{ tileId(panel.id) }}</button>
     </div>
   </div>
@@ -21,11 +22,19 @@ export default class extends Vue {
     return this.$store.getters.deleted
   }
 
+  /**
+   * computed @method getTileId performs search in deleted panels by id passed in param
+   * @returns {number} id of found panel
+   */
   get tileId() {
     return (id: number) => {
       const deleted = this.$store.getters.deleted.find((panel: Panel) => panel.id == id)
       return deleted.id
     }
+  }
+
+  restoreTile(id: number): void {
+    this.$store.dispatch('restoreTile', id)
   }
 }
 </script>

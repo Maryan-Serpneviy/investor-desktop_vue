@@ -70,7 +70,7 @@ export default class extends Vue {
 
   /**
    * @method loadTileParams restores last page coords, last known size of tile
-   * from local storage
+   * stored in panel object in local storage
    */
   loadTileParams() {
     const { tile } = this.$refs

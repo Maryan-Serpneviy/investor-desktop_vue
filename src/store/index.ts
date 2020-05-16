@@ -58,7 +58,7 @@ export default new Vuex.Store({
     moveToDeleted(state, id) {
       const matched = state.panels.find(panel => panel.id == id)
       const matchedIndex = state.panels.indexOf(matched)
-      const deleted = state.panels.splice(matchedIndex, 1)
+      const deleted = state.panels.splice(matchedIndex, 1)[0]
       state.deleted.push(deleted)
     }
   },

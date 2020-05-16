@@ -2,14 +2,11 @@
   <div class="restore-panel">
     <p class="restore-panel__text">Restore recently removed</p>
     <div class="restore-panel__removed">
-      <!-- <button class="removed-panel">Tile 1</button>
-      <button class="removed-panel">Tile 2</button>
-      <button class="removed-panel">Tile 3</button> -->
       <button
         class="removed-panel"
-        v-for="panel in removed"
+        v-for="(panel) in removed"
         :key="panel.id"
-      >Tile {{ panel.id }}</button>
+      >Tile {{ tileId(panel.id) }}</button>
     </div>
   </div>
 </template>
@@ -22,6 +19,13 @@ import { Panel } from '@/types/interfaces'
 export default class extends Vue {
   get removed(): [] | Array<Panel> {
     return this.$store.getters.deleted
+  }
+
+  get tileId() {
+    return (id: number) => {
+      const deleted = this.$store.getters.deleted.find((panel: Panel) => panel.id == id)
+      return deleted.id
+    }
   }
 }
 </script>

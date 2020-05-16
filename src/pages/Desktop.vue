@@ -25,6 +25,7 @@ import RestorePanel from '@/components/RestorePanel.vue'
 export default class extends Vue {
   created() {
     this.$store.dispatch('loadPanels')
+    this.$store.dispatch('loadDeleted')
   }
 
   get panels(): Array<Panel> {

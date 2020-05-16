@@ -17,7 +17,10 @@ export default new Vuex.Store({
   },
   mutations: {
     loadPanels(state) {
-      state.panels = PanelsService.load()
+      state.panels = PanelsService.loadPanels()
+    },
+    loadDeleted(state) {
+      state.deleted = PanelsService.loadDeleted()
     },
     showOnTop(state, id: number) {
       const matched = state.panels.find(panel => panel.id == id)
@@ -79,6 +82,9 @@ export default new Vuex.Store({
     loadPanels(store) {
       store.commit('loadPanels')
     },
+    loadDeleted(store) {
+      store.commit('loadDeleted')
+    },
     showOnTop(store, id: number) {
       store.commit('showOnTop', id)
     },
@@ -93,17 +99,21 @@ export default new Vuex.Store({
     },
     saveTileCoords(store, payload: { id: number; x: number; y: number }) {
       store.commit('savePanelPosition', payload)
-      PanelsService.save(store.state.panels)
+      PanelsService.savePanels(store.state.panels)
     },
     saveTileSize(store, payload: { id: number; width: number; height: number }) {
       store.commit('savePanelSize', payload)
-      PanelsService.save(store.state.panels)
+      PanelsService.savePanels(store.state.panels)
     },
     removeTile(store, id: number) {
       store.commit('moveToDeleted', id)
+      PanelsService.savePanels(store.state.panels)
+      PanelsService.saveDeleted(store.state.deleted)
     },
     restoreTile(store, id: number) {
       store.commit('moveFromDeleted', id)
+      PanelsService.savePanels(store.state.panels)
+      PanelsService.saveDeleted(store.state.deleted)
     }
   },
   modules: {

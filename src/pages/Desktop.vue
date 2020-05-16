@@ -28,6 +28,10 @@ export default class extends Vue {
     this.$store.dispatch('loadDeleted')
   }
 
+  mounted() {
+    this.$store.dispatch('cancelSelection')
+  }
+
   get panels(): Array<Panel> {
     return this.$store.getters.panels
   }

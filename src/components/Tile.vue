@@ -13,7 +13,7 @@
   >
     <header>
       Tile {{ panel.id }}
-      <span class="close">&times;</span>
+      <span class="remove" title="Remove tile" @click="removeTile(panel.id)">&times;</span>
     </header>
     <div class="panel-content">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi iusto id alias illo numquam ut delectus, sit, non harum quas molestias temporibus
@@ -51,13 +51,13 @@ export default class extends Vue {
    * holds screen coords where drag was started
    * @constructs Coordinate creates object with x and y axis coords
    */
-  private pageCoords = new Coordinate(0, 0)
+  pageCoords = new Coordinate(0, 0)
 
   /**
    * holds array of constants which will be transformed
    * and corresponding resize markers will be rendered
    */
-  private pins: Array<string> = PIN_POSITIONS
+  pins: Array<string> = PIN_POSITIONS
 
   /**
    * Detect click on blank screen immediately when component is mounted
@@ -136,7 +136,7 @@ export default class extends Vue {
   /**
    * @method dragStart captures and stores screen coords where drag was started
    */
-  private dragStart(event: any): void {
+  dragStart(event: any): void {
     this.pageCoords = new Coordinate(event.pageX, event.pageY)
   }
 
@@ -145,7 +145,7 @@ export default class extends Vue {
    * @constructs Coordinate shift - a diff between start event coords and cursor.
    * Updates panel's coordinates
    */
-  private drag(event: any): void {
+  drag(event: any): void {
     if (this.resizing) return
     const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
     event.target.style.left = this.panel.posX + shift.x + 'px'
@@ -158,7 +158,7 @@ export default class extends Vue {
    * Updates panel's coordinates
    * Sends tile page coords to the store
    */
-  private dragEnd(event: any): void {
+  dragEnd(event: any): void {
     if (this.resizing) return
     const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
     event.target.style.left = this.panel.posX + shift.x + 'px'
@@ -166,6 +166,10 @@ export default class extends Vue {
 
     const lastCoords = new Coordinate(parseInt(event.target.style.left), parseInt(event.target.style.top))
     this.$store.dispatch('saveTileCoords', { id: this.panel.id, ...lastCoords })
+  }
+
+  removeTile(id: number): void {
+    this.$store.dispatch('removeTile', id)
   }
 }
 </script>
@@ -205,7 +209,11 @@ export default class extends Vue {
   z-index: 1;
 }
 
-.close {
-  padding: 5px;
+.remove {
+  position: absolute;
+  right: 5px;
+  top: 0;
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 </style>

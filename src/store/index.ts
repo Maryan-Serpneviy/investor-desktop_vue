@@ -13,25 +13,25 @@ export default new Vuex.Store({
   },
   getters: {
     panels: (state) => state.panels,
-    panelById: (state, panelId) => state.panels.find(panel => panel.id == panelId)
+    deleted: (state) => state.deleted
   },
   mutations: {
     loadPanels(state) {
       state.panels = PanelsService.load()
     },
-    showOnTop(state, panelId: number) {
-      const matchedPanel = state.panels.find(panel => panel.id == panelId)
+    showOnTop(state, id: number) {
+      const matched = state.panels.find(panel => panel.id == id)
       state.panels.forEach(panel => {
         panel.zIndex = 1
       })
-      matchedPanel.zIndex = 2
+      if (matched) matched.zIndex = 2
     },
-    markPanelActive(state, panelId: number) {
+    markPanelActive(state, id: number) {
       state.panels.forEach(panel => {
         panel.active = false
       })
-      const matchedPanel = state.panels.find(panel => panel.id == panelId)
-      matchedPanel.active = true
+      const matched = state.panels.find(panel => panel.id == id)
+      if (matched) matched.active = true
     },
     markAllInactive(state) {
       state.panels.forEach(panel => {
@@ -42,44 +42,52 @@ export default new Vuex.Store({
       state.resizing = status
     },
     savePanelPosition(state, payload: { id: number; x: number; y: number }) {
-      const matchedPanel = state.panels.find(panel => panel.id == payload.id)
-      matchedPanel.posX = payload.x
-      matchedPanel.posY = payload.y
+      const matched = state.panels.find(panel => panel.id == payload.id)
+      if (matched) {
+        matched.posX = payload.x
+        matched.posY = payload.y
+      }
     },
     savePanelSize(state, payload: { id: number; width: number; height: number }) {
-      const matchedPanel = state.panels.find(panel => panel.id == payload.id)
-      matchedPanel.width = payload.width
-      matchedPanel.height = payload.height
+      const matched = state.panels.find(panel => panel.id == payload.id)
+      if (matched) {
+        matched.width = payload.width
+        matched.height = payload.height
+      }
+    },
+    moveToDeleted(state, id) {
+      const matched = state.panels.find(panel => panel.id == id)
+      const matchedIndex = state.panels.indexOf(matched)
+      const deleted = state.panels.splice(matchedIndex, 1)
+      state.deleted.push(deleted)
     }
   },
   actions: {
     loadPanels(store) {
       store.commit('loadPanels')
     },
-    showOnTop(store, panelId: number) {
-      store.commit('showOnTop', panelId)
+    showOnTop(store, id: number) {
+      store.commit('showOnTop', id)
     },
-    toggleActive(store, panelId: number) {
-      store.commit('markPanelActive', panelId)
-      return true
+    toggleActive(store, id: number) {
+      store.commit('markPanelActive', id)
     },
     cancelSelection(store) {
       store.commit('markAllInactive')
-      return true
     },
     toggleResize(store, status: boolean) {
       store.commit('changeResizingState', status)
-      return true
     },
     saveTileCoords(store, payload: { id: number; x: number; y: number }) {
       store.commit('savePanelPosition', payload)
       PanelsService.save(store.state.panels)
-      return true
     },
     saveTileSize(store, payload: { id: number; width: number; height: number }) {
       store.commit('savePanelSize', payload)
       PanelsService.save(store.state.panels)
-      return true
+    },
+    removeTile(store, id) {
+      store.commit('moveToDeleted', id)
     }
   },
   modules: {

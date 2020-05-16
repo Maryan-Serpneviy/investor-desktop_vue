@@ -22,7 +22,7 @@ export default class extends Vue {
    * stores cursor coordinates when resize is triggered
    * @constructs Coordinate creates object with x and y axis coords
    */
-  private startCoords = new Coordinate(0, 0)
+  startCoords = new Coordinate(0, 0)
 
   /**
    * @method resizeStart captures a moment when resizing starts.
@@ -30,7 +30,7 @@ export default class extends Vue {
    * Informs a store that resizing is triggered so that tile position
    * couldn't change during drag event in Tile component
    */
-  private resizeStart(event: any): void {
+  resizeStart(event: any): void {
     this.startCoords = new Coordinate(event.pageX, event.pageY)
     this.$store.dispatch('toggleResize', true)
   }
@@ -40,7 +40,7 @@ export default class extends Vue {
    * Use setTimeout with zero delay to throw function in the end of call stack
    * to prevent the 'dragend' event trigger and tile coords change
    */
-  private resizeEnd(event: any): void {
+  resizeEnd(event: any): void {
     const shift = this.calculateShift(event.pageX, event.pageY)
     this.tile.style.width = this.tile.clientWidth + shift.x + 'px'
     this.tile.style.height = this.tile.clientHeight + shift.y + 'px'
@@ -63,7 +63,7 @@ export default class extends Vue {
    * @param {number} endCoordY hand over the resize event endpoint on Y axis
    * @returns {Coordinate} object with x and y axis coords
    */
-  private calculateShift(endCoordX: number, endCoordY: number) {
+  calculateShift(endCoordX: number, endCoordY: number) {
     switch (this.position) {
       case 'bottom-left':
         return new Coordinate(this.startCoords.x - endCoordX, endCoordY - this.startCoords.y)

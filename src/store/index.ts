@@ -2,12 +2,14 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import { desktopModule } from './desktop.store'
+import { transactionsModule } from './transactions.store'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   strict: process.env.NODE_ENV != 'production',
   modules: {
-    desktop: desktopModule
+    desktop: desktopModule,
+    transactions: transactionsModule
   }
 })

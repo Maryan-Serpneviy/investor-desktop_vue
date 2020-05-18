@@ -1,36 +1,38 @@
 <template>
   <div class="transactions-wrapper">
     <div class="transactions-controls">
-      <el-button type="success">Start</el-button>
-      <el-button type="danger">Stop</el-button>
-      <el-button type="warning">Reset</el-button>
+      <el-button type="success" @click="subscribe">Start</el-button>
+      <el-button type="danger" @click="unsubscribe">Stop</el-button>
+      <el-button type="warning" @click="reset">Reset</el-button>
     </div>
-    <h2 class="transactions-sum">Sum: 0002345.04 BC</h2>
+    <h2 class="transactions-sum">Sum: {{ sum }} BTC</h2>
     <el-table
       stripe
       border
-      :data="tableData">
+      :data="transactions">
       <el-table-column
-        prop="date"
+        prop="from"
         label="From"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="to"
         label="To"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="address"
+        prop="sum"
         label="Sum">
       </el-table-column>
     </el-table>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { Button, Table, TableColumn } from 'element-ui'
+import { SUBSCRIBE, UNSUBSCRIBE } from '@/core/config'
+import { Transaction } from '@/types/interfaces'
 
 @Component({
   components: {
@@ -40,23 +42,33 @@ import { Button, Table, TableColumn } from 'element-ui'
   }
 })
 export default class extends Vue {
-  tableData = [{
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  }, {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  }, {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  }, {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  }]
+  get transactions(): Array<Transaction> {
+    return this.$store.getters.transactions
+  }
+
+  get sum(): number {
+    return this.$store.getters.sum.toFixed(7)
+  }
+
+  created() {
+    this.$connect()
+  }
+
+  beforeDestroy() {
+    this.$disconnect()
+  }
+
+  subscribe() {
+    this.$store.dispatch('sendMessage', SUBSCRIBE)
+  }
+
+  unsubscribe() {
+    this.$store.dispatch('sendMessage', UNSUBSCRIBE)
+  }
+
+  reset() {
+    this.$store.dispatch('resetTransactions')
+  }
 }
 </script>
 

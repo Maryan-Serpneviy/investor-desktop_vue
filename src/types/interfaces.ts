@@ -8,7 +8,8 @@ export interface Panel {
   height: number
 }
 
-export interface Coord {
-  x: number
-  y: number
+export interface Transaction {
+  from: string
+  to: string
+  sum: number
 }

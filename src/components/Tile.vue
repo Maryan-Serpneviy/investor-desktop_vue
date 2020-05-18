@@ -127,10 +127,10 @@ export default class extends Vue {
 
   /**
    * computed @method resizing
-   * @returns {boolean} information from store about resize state
+   * @returns {boolean} information from store about resizing state
    */
   get resizing(): boolean {
-    return this.$store.state.resizing
+    return this.$store.getters.resizing
   }
 
   /**

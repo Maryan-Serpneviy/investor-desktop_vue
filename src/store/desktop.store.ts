@@ -23,7 +23,8 @@ export const desktopModule = {
   }),
   getters: {
     panels: (state: { panels: Panel[] }) => state.panels,
-    deleted: (state: { deleted: Panel[] | [] }) => state.deleted
+    deleted: (state: { deleted: Panel[] | [] }) => state.deleted,
+    resizing: (state: { resizing: boolean }) => state.resizing
   },
   mutations: {
     [LOAD_PANELS] (state: { panels: Panel[] }) {

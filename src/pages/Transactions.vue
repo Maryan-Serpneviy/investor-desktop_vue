@@ -1,9 +1,21 @@
 <template>
   <div class="transactions-wrapper">
     <div class="transactions-controls">
-      <el-button type="success" @click="subscribe">Start</el-button>
-      <el-button type="danger" @click="unsubscribe">Stop</el-button>
-      <el-button type="warning" @click="reset">Reset</el-button>
+      <el-button
+        type="success"
+        @click="subscribe"
+        :disabled="subscribed"
+      >Start</el-button>
+      <el-button
+        type="danger"
+        @click="unsubscribe"
+        :disabled="!subscribed"
+      >Stop</el-button>
+      <el-button
+        type="warning"
+        @click="reset"
+        :disabled="!transactions.length"
+      >Reset</el-button>
     </div>
     <h2 class="transactions-sum">Sum: {{ sum }} BTC</h2>
     <el-table
@@ -42,6 +54,8 @@ import { Transaction } from '@/types/interfaces'
   }
 })
 export default class extends Vue {
+  subscribed = false
+
   get transactions(): Array<Transaction> {
     return this.$store.getters.transactions
   }
@@ -59,10 +73,12 @@ export default class extends Vue {
   }
 
   subscribe() {
+    this.subscribed = true
     this.$store.dispatch('sendMessage', SUBSCRIBE)
   }
 
   unsubscribe() {
+    this.subscribed = false
     this.$store.dispatch('sendMessage', UNSUBSCRIBE)
   }
 

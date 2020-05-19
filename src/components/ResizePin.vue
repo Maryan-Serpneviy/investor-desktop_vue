@@ -50,7 +50,6 @@ export default class extends Vue {
       width: this.tile.clientWidth,
       height: this.tile.clientHeight
     })
-    this.$store.dispatch('cancelSelection')
 
     setTimeout(() => {
       this.$store.dispatch('toggleResize', false)

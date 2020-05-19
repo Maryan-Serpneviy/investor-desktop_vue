@@ -4,12 +4,12 @@ import router from './router'
 import store from './store'
 
 import VueWebSocket from 'vue-native-websocket'
-import { VWSOptions } from '@/plugins/websocket'
-import { WS_API_URL } from '@/core/config'
+import { API_URL, VWSOptions } from '@/core/api.config'
 
 Vue.config.productionTip = false
 
-Vue.use(VueWebSocket, WS_API_URL,
+Vue.use(VueWebSocket,
+  API_URL,
   {
     store,
     ...VWSOptions

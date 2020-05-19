@@ -1,12 +1,8 @@
 import Vue from 'vue'
-import VueWebSocket from 'vue-websocket'
+import VueWebSocket from 'vue-native-websocket'
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $options: {
-      socket: typeof WebSocket
-    }
-    $connect: () => void
-    $disconnect: () => void
+
   }
 }

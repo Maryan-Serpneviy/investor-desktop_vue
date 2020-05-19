@@ -1,35 +1,35 @@
 <template>
   <transition name="remove" mode="out-in">
-  <div
-    :id="`panel-${panel.id}`"
-    :class="tileClasses"
-    :style="{ zIndex: panel.zIndex }"
-    ref="tile"
-    draggable="true"
-    @dragstart="dragStart"
-    @drag="drag"
-    @dragend="dragEnd"
-    @click="toggleActive"
-    @mousedown="showOnTop"
-  >
-    <header>
-      Tile {{ panel.id }}
-      <span class="remove" title="Remove tile" @click="removeTile(panel.id)">&times;</span>
-    </header>
-    <div class="panel-content">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi iusto id alias illo numquam ut delectus, sit, non harum quas molestias temporibus
-    </div>
+    <div
+      :id="`panel-${panel.id}`"
+      :class="tileClasses"
+      :style="{ zIndex: panel.zIndex }"
+      ref="tile"
+      draggable="true"
+      @dragstart="dragStart"
+      @drag="drag"
+      @dragend="dragEnd"
+      @click="toggleActive"
+      @mousedown="showOnTop"
+    >
+      <header>
+        Tile {{ panel.id }}
+        <span class="button-remove" title="Remove tile" @click="removeTile(panel.id)">&times;</span>
+      </header>
+      <div class="panel-content">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi iusto id alias illo numquam ut delectus, sit, non harum quas molestias temporibus
+      </div>
 
-    <div v-if="panel.active">
-      <resize-pin
-        v-for="pin in pins"
-        :key="pin"
-        :position="pin"
-        :panelId="panel.id"
-        :tile="$refs.tile"
-      />
+      <div v-if="panel.active">
+        <resize-pin
+          v-for="pin in pins"
+          :key="pin"
+          :position="pin"
+          :panelId="panel.id"
+          :tile="$refs.tile"
+        />
+      </div>
     </div>
-  </div>
   </transition>
 </template>
 
@@ -38,7 +38,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Coordinate } from '@/core/constructors'
 import { getPageWidth, getPageHeight } from '@/core/helper-functions'
-import { PIN_POSITIONS } from '@/core/config'
+import { DRAG_STEP, PIN_POSITIONS } from '@/core/config'
 import { Panel } from '@/types/interfaces'
 import ResizePin from './ResizePin.vue'
 
@@ -49,11 +49,6 @@ import ResizePin from './ResizePin.vue'
 })
 export default class extends Vue {
   @Prop() panel!: Panel
-
-  updated() {
-    console.log(this.$refs.tile.offsetLeft)
-    console.log(this.$refs.tile.offsetTop)
-  }
 
   /**
    * holds screen coords where drag was started
@@ -82,13 +77,9 @@ export default class extends Vue {
    */
   loadTileParams() {
     const { tile } = this.$refs
-    if (this.panel.posX != 0) {
-      console.log('ad')
-      tile.style.left = this.panel.posX + 'px'
-    }
-    if (this.panel.posY != 0) {
-      tile.style.top = this.panel.posY + 'px'
-    }
+    console.log(this.panel.posX, this.panel.posY)
+    tile.style.left = this.panel.posX + 'px'
+    tile.style.top = this.panel.posY + 'px'
     tile.style.width = this.panel.width + 'px'
     tile.style.height = this.panel.height + 'px'
     tile.style.zIndex = this.panel.zIndex
@@ -146,6 +137,10 @@ export default class extends Vue {
     return this.$store.getters.resizing
   }
 
+  isOffPageLimits(left: number, top: number): boolean {
+    return left < 0 || top < 0
+  }
+
   /**
    * @method dragStart captures and stores screen coords where drag was started
    */
@@ -156,31 +151,45 @@ export default class extends Vue {
   /**
    * @method drag only executes if resize isn't toggled
    * @constructs Coordinate shift - a diff between start event coords and cursor.
-   * Updates panel's coordinates
+   * Updates panel's coordinates on grid
+   * Tile coords are updated only by @constant DRAG_STEP value
    */
   drag(event: any): void {
     if (this.resizing) return
-    if (event.target.offsetLeft < 0 || event.target.offsetTop < 0) {
-      console.warn('off screen limits!')
+    const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
+    if (event.target.offsetLeft + shift.x < 0 || event.target.offsetTop + shift.y < 0) {
       return
     }
-    const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
-    event.target.style.left = this.panel.posX + shift.x + 'px'
-    event.target.style.top = this.panel.posY + shift.y + 'px'
+    if (shift.x % DRAG_STEP == 0) {
+      event.target.style.left = this.panel.posX + shift.x + 'px'
+    }
+    if (shift.y % DRAG_STEP == 0) {
+      event.target.style.top = this.panel.posY + shift.y + 'px'
+    }
   }
 
   /**
    * @method drag only executes if resize isn't toggled
    * @constructs Coordinate shift - a diff between start event coords and cursor.
    * Updates panel's coordinates
+   * Tile coords are updated only by @constant DRAG_STEP value
    * Sends tile page coords to the store
    */
   dragEnd(event: any): void {
-    console.log(getPageWidth())
     if (this.resizing) return
     const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
-    event.target.style.left = this.panel.posX + shift.x + 'px'
-    event.target.style.top = this.panel.posY + shift.y + 'px'
+    if (event.target.offsetLeft + shift.x < 0 || event.target.offsetTop + shift.y < 0) {
+      return
+    }
+    if (shift.x % DRAG_STEP == 0) {
+      event.target.style.left = this.panel.posX + shift.x + 'px'
+    }
+    if (shift.y % DRAG_STEP == 0) {
+      event.target.style.top = this.panel.posY + shift.y + 'px'
+    }
+    if (event.target.offsetLeft < 0 || event.target.offsetTop < 0) {
+      this.$store.dispatch('returnTile', this.panel.id)
+    }
 
     const lastCoords = new Coordinate(parseInt(event.target.style.left), parseInt(event.target.style.top))
     this.$store.dispatch('saveTileCoords', { id: this.panel.id, ...lastCoords })
@@ -195,13 +204,12 @@ export default class extends Vue {
 <style lang="scss" scoped>
 .panel {
   border: 1px solid #ccc;
-  margin-bottom: 25px;
   background-color: #f7f7f7;
   overflow: hidden;
-  position: relative;
+  position: absolute;
   width: 300px;
   height: 100px;
-  min-width: 100px;
+  min-width: 200px;
   min-height: 50px;
 
   header {
@@ -227,7 +235,7 @@ export default class extends Vue {
   z-index: 1;
 }
 
-.remove {
+.button-remove {
   position: absolute;
   right: 5px;
   top: 0;
@@ -244,7 +252,13 @@ export default class extends Vue {
     transform: translateY(0px)
   }
   to {
-    transform: translateY(77vw) scale(0.4)
+    transform: translateY(100vw) scale(0.4)
+  }
+}
+
+@media screen and(max-width: 980px) {
+  .panel {
+    margin-left: 25px;
   }
 }
 </style>

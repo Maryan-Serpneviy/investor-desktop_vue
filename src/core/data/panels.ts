@@ -1,49 +1,50 @@
 import { Panel } from '@/types/interfaces'
+import { PANEL_WIDTH, PANEL_HEIGHT } from '@/core/config'
 
 export default (): Array<Panel> => ([
   {
     id: 1,
-    active: false,
+    posX: 25,
+    posY: 60,
+    width: PANEL_WIDTH,
+    height: PANEL_HEIGHT,
     zIndex: 0,
-    posX: 0,
-    posY: 0,
-    width: 300,
-    height: 100
+    active: false
   },
   {
     id: 2,
-    active: false,
+    posX: 350,
+    posY: 60,
+    width: PANEL_WIDTH,
+    height: PANEL_HEIGHT,
     zIndex: 0,
-    posX: 0,
-    posY: 0,
-    width: 300,
-    height: 100
+    active: false
   },
   {
     id: 3,
-    active: false,
+    posX: 675,
+    posY: 60,
+    width: PANEL_WIDTH,
+    height: PANEL_HEIGHT,
     zIndex: 0,
-    posX: 0,
-    posY: 0,
-    width: 300,
-    height: 100
+    active: false
   },
   {
     id: 4,
-    active: false,
+    posX: 25,
+    posY: 185,
+    width: PANEL_WIDTH,
+    height: PANEL_HEIGHT,
     zIndex: 0,
-    posX: 0,
-    posY: 0,
-    width: 300,
-    height: 100
+    active: false
   },
   {
     id: 5,
-    active: false,
+    posX: 350,
+    posY: 185,
+    width: PANEL_WIDTH,
+    height: PANEL_HEIGHT,
     zIndex: 0,
-    posX: 0,
-    posY: 0,
-    width: 300,
-    height: 100
+    active: false
   }
 ])

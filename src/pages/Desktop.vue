@@ -48,10 +48,6 @@ export default class extends Vue {
 
 .desktop {
   height: 90vh;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly
 }
 
 .pop-enter-active {
@@ -78,7 +74,7 @@ export default class extends Vue {
     transform: translateX(0px)
   }
   to {
-    transform: translateX(-100vw)
+    transform: translateX(-90vw)
   }
 }
 </style>

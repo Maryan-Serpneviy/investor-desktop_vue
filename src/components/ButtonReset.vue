@@ -1,6 +1,6 @@
 <template>
   <el-button
-    type="danger"
+    type="info"
     plain
     id="reset-button"
     title="Reset panels config"
@@ -29,6 +29,7 @@ export default class extends Vue {
 <style scoped>
 #reset-button {
   position: absolute;
+  opacity: 0.75;
   right: 20px;
   top: 10px;
 }

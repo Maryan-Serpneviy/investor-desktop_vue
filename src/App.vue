@@ -35,8 +35,7 @@ export default class extends Vue {
 }
 
 #nav {
-  padding: 20px;
-  border-bottom: 1px dashed #2c3e50;
+  padding-top: 20px;
 
   a {
     font-weight: bold;

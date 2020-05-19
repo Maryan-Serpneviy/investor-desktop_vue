@@ -1,11 +1,11 @@
 export interface Panel {
   id: number
-  active: boolean
-  zIndex: number
   posX: number
   posY: number
   width: number
   height: number
+  zIndex: number
+  active: boolean
 }
 
 export interface Transaction {

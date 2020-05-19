@@ -1,6 +1,8 @@
 import { PanelsService } from '@/core/services/panels.service'
 import { Panel } from '@/types/interfaces'
 import { Type } from './mutation-types'
+import { PANEL_WIDTH, PANEL_HEIGHT } from '@/core/config'
+import { getPageWidth, getPageHeight } from '@/core/helper-functions'
 
 const {
   LOAD_PANELS,
@@ -81,10 +83,10 @@ export const desktopModule = {
       const matchedIndex = state.deleted.indexOf(matched)
       const restored = state.deleted.splice(matchedIndex, 1)[0]
 
-      restored.width = 300
-      restored.height = 100
-      restored.posX = 0
-      restored.posY = 0
+      restored.width = PANEL_WIDTH
+      restored.height = PANEL_HEIGHT
+      restored.posX = getPageWidth() / 2 - PANEL_WIDTH / 2
+      restored.posY = getPageHeight() / 2 - PANEL_HEIGHT / 2
 
       state.panels.push(restored)
     }
@@ -125,6 +127,9 @@ export const desktopModule = {
       store.commit(MOVE_FROM_DELETED, id)
       PanelsService.savePanels(store.state.panels)
       PanelsService.saveDeleted(store.state.deleted)
+    },
+    returnTile(store, id: number) {
+      
     },
     resetTilesConfig(store: any) {
       PanelsService.clear()

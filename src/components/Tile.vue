@@ -1,4 +1,5 @@
 <template>
+  <transition name="remove" mode="out-in">
   <div
     :id="`panel-${panel.id}`"
     :class="tileClasses"
@@ -29,12 +30,14 @@
       />
     </div>
   </div>
+  </transition>
 </template>
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Coordinate } from '@/core/constructors'
+import { getPageWidth, getPageHeight } from '@/core/helper-functions'
 import { PIN_POSITIONS } from '@/core/config'
 import { Panel } from '@/types/interfaces'
 import ResizePin from './ResizePin.vue'
@@ -46,6 +49,11 @@ import ResizePin from './ResizePin.vue'
 })
 export default class extends Vue {
   @Prop() panel!: Panel
+
+  updated() {
+    console.log(this.$refs.tile.offsetLeft)
+    console.log(this.$refs.tile.offsetTop)
+  }
 
   /**
    * holds screen coords where drag was started
@@ -74,8 +82,13 @@ export default class extends Vue {
    */
   loadTileParams() {
     const { tile } = this.$refs
-    tile.style.left = this.panel.posX + 'px'
-    tile.style.top = this.panel.posY + 'px'
+    if (this.panel.posX != 0) {
+      console.log('ad')
+      tile.style.left = this.panel.posX + 'px'
+    }
+    if (this.panel.posY != 0) {
+      tile.style.top = this.panel.posY + 'px'
+    }
     tile.style.width = this.panel.width + 'px'
     tile.style.height = this.panel.height + 'px'
     tile.style.zIndex = this.panel.zIndex
@@ -147,6 +160,10 @@ export default class extends Vue {
    */
   drag(event: any): void {
     if (this.resizing) return
+    if (event.target.offsetLeft < 0 || event.target.offsetTop < 0) {
+      console.warn('off screen limits!')
+      return
+    }
     const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
     event.target.style.left = this.panel.posX + shift.x + 'px'
     event.target.style.top = this.panel.posY + shift.y + 'px'
@@ -159,6 +176,7 @@ export default class extends Vue {
    * Sends tile page coords to the store
    */
   dragEnd(event: any): void {
+    console.log(getPageWidth())
     if (this.resizing) return
     const shift = new Coordinate(event.pageX - this.pageCoords.x, event.pageY - this.pageCoords.y)
     event.target.style.left = this.panel.posX + shift.x + 'px'
@@ -215,5 +233,18 @@ export default class extends Vue {
   top: 0;
   font-size: 1.4rem;
   cursor: pointer;
+}
+
+.remove-leave-active {
+  animation: remove-out 0.35s ease-out
+}
+
+@keyframes remove-out {
+  from {
+    transform: translateY(0px)
+  }
+  to {
+    transform: translateY(77vw) scale(0.4)
+  }
 }
 </style>

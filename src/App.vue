@@ -3,10 +3,27 @@
     <div id="nav">
       <router-link to="/">Desktop</router-link> |
       <router-link to="/transactions">Transactions</router-link>
+      <button-reset v-if="desktopPage" />
     </div>
     <router-view/>
   </div>
 </template>
+
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator'
+import ButtonReset from '@/components/ButtonReset.vue'
+
+@Component({
+  components: {
+    ButtonReset
+  }
+})
+export default class extends Vue {
+  get desktopPage(): boolean {
+    return this.$route.path == '/'
+  }
+}
+</script>
 
 <style lang="scss">
 #app {

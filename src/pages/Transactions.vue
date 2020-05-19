@@ -43,10 +43,11 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { Button, Table, TableColumn } from 'element-ui'
-import { SUBSCRIBE, UNSUBSCRIBE } from '@/core/config'
+import { SUBSCRIBE, UNSUBSCRIBE } from '@/core/api.config'
 import { Transaction } from '@/types/interfaces'
 
 @Component({
+  name: 'Transactions',
   components: {
     ElButton: Button,
     ElTable: Table,
@@ -72,17 +73,17 @@ export default class extends Vue {
     this.$disconnect()
   }
 
-  subscribe() {
+  subscribe(): void {
     this.subscribed = true
     this.$store.dispatch('sendMessage', SUBSCRIBE)
   }
 
-  unsubscribe() {
+  unsubscribe(): void {
     this.subscribed = false
     this.$store.dispatch('sendMessage', UNSUBSCRIBE)
   }
 
-  reset() {
+  reset(): void {
     this.$store.dispatch('resetTransactions')
   }
 }

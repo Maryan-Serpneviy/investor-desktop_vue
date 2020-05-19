@@ -17,7 +17,7 @@
         :disabled="!transactions.length"
       >Reset</el-button>
     </div>
-    <h2 class="transactions-sum">Sum: {{ sum }} BTC</h2>
+    <h2 class="transactions-sum">Sum {{ sum }} BTC</h2>
     <el-table
       stripe
       border
@@ -99,5 +99,9 @@ export default class extends Vue {
 
 .transactions-controls {
   margin-bottom: 30px;
+}
+
+.transactions-sum {
+  margin-bottom: 20px;
 }
 </style>

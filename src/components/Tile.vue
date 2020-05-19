@@ -37,7 +37,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Coordinate } from '@/core/constructors'
-import { getPageWidth, getPageHeight } from '@/core/helper-functions'
 import { DRAG_STEP, PIN_POSITIONS } from '@/core/config'
 import { Panel } from '@/types/interfaces'
 import ResizePin from './ResizePin.vue'

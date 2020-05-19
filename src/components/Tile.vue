@@ -77,7 +77,6 @@ export default class extends Vue {
    */
   loadTileParams() {
     const { tile } = this.$refs
-    console.log(this.panel.posX, this.panel.posY)
     tile.style.left = this.panel.posX + 'px'
     tile.style.top = this.panel.posY + 'px'
     tile.style.width = this.panel.width + 'px'

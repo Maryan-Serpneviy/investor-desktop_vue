@@ -125,6 +125,9 @@ export const desktopModule = {
       store.commit(MOVE_FROM_DELETED, id)
       PanelsService.savePanels(store.state.panels)
       PanelsService.saveDeleted(store.state.deleted)
+    },
+    resetTilesConfig(store: any) {
+      PanelsService.clear()
     }
   }
 }

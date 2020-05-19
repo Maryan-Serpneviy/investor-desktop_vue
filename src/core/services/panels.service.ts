@@ -9,7 +9,7 @@ export class PanelsService {
   static save(payload: Array<Panel>, storageKey: string) {
     try {
       const serializedPanels = JSON.stringify(payload)
-      localStorage.setItem(storageKey, serializedPanels)
+      window.localStorage.setItem(storageKey, serializedPanels)
     } catch (err) {
       console.error(err)
     }
@@ -25,7 +25,7 @@ export class PanelsService {
 
   static loadPanels() {
     try {
-      const serializedPanels = localStorage.getItem(PANELS)
+      const serializedPanels = window.localStorage.getItem(PANELS)
       if (serializedPanels === null) {
         return getPanels()
       }
@@ -37,13 +37,27 @@ export class PanelsService {
 
   static loadDeleted() {
     try {
-      const serializedPanels = localStorage.getItem(DELETED)
+      const serializedPanels = window.localStorage.getItem(DELETED)
       if (serializedPanels === null) {
         return []
       }
       return JSON.parse(serializedPanels)
     } catch (err) {
       return undefined
+    }
+  }
+
+  static clear() {
+    try {
+      if (window.localStorage.getItem(PANELS)) {
+        window.localStorage.removeItem(PANELS)
+      }
+      if (window.localStorage.getItem(DELETED)) {
+        window.localStorage.removeItem(DELETED)
+      }
+      window.location.reload()
+    } catch (err) {
+      console.error(err)
     }
   }
 }

@@ -1,10 +1,10 @@
 <template>
   <div class="desktop">
-    <transition-group name="remove" mode="out-in">
+    <!-- <transition-group name="remove" mode="out-in"> -->
       <app-tile v-for="panel in panels" :panel="panel" :key="panel.id" />
-    </transition-group>
+    <!-- </transition-group> -->
     <transition name="pop" mode="out-in">
-      <restore-panel v-if="deleted.length" />
+      <app-restore-panel v-if="deleted.length" />
     </transition>
   </div>
 </template>
@@ -19,7 +19,7 @@ import RestorePanel from '@/components/RestorePanel.vue'
   name: 'Desktop',
   components: {
     AppTile: Tile,
-    RestorePanel
+    AppRestorePanel: RestorePanel
   }
 })
 export default class extends Vue {
@@ -42,7 +42,7 @@ export default class extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
 * {
   padding: 0;
   margin: 0;
@@ -54,7 +54,6 @@ export default class extends Vue {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  overflow: hidden;
 }
 
 /* remove transition */

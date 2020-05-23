@@ -21,7 +21,7 @@
       </div>
 
       <div v-if="panel.active">
-        <resize-pin
+        <ResizePin
           v-for="pin in pins"
           :key="pin"
           :position="pin"

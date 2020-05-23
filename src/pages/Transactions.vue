@@ -1,42 +1,42 @@
 <template>
   <div class="transactions-wrapper">
     <div class="transactions-controls">
-      <el-button
+      <Button
         type="success"
         @click="subscribe"
         :disabled="subscribed"
-      >Start</el-button>
-      <el-button
+      >Start</Button>
+      <Button
         type="danger"
         @click="unsubscribe"
         :disabled="!subscribed"
-      >Stop</el-button>
-      <el-button
+      >Stop</Button>
+      <Button
         type="warning"
         @click="reset"
         :disabled="!transactions.length"
-      >Reset</el-button>
+      >Reset</Button>
     </div>
     <h2 class="transactions-sum">Sum {{ sum }} BTC</h2>
-    <el-table
+    <Table
       stripe
       border
       :data="transactions">
-      <el-table-column
+      <TableColumn
         prop="from"
         label="From"
         width="180">
-      </el-table-column>
-      <el-table-column
+      </TableColumn>
+      <TableColumn
         prop="to"
         label="To"
         width="180">
-      </el-table-column>
-      <el-table-column
+      </TableColumn>
+      <TableColumn
         prop="sum"
         label="Sum">
-      </el-table-column>
-    </el-table>
+      </TableColumn>
+    </Table>
   </div>
 </template>
 
@@ -49,9 +49,9 @@ import { Transaction } from '@/types/interfaces'
 @Component({
   name: 'Transactions',
   components: {
-    ElButton: Button,
-    ElTable: Table,
-    ElTableColumn: TableColumn
+    Button,
+    Table,
+    TableColumn
   }
 })
 export default class extends Vue {

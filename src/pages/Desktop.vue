@@ -1,9 +1,9 @@
 <template>
   <div class="desktop">
-    <app-tile v-for="panel in panels" :panel="panel" :key="panel.id" />
-    <transition name="pop" mode="out-in">
-      <app-restore-panel v-if="deleted.length" />
-    </transition>
+    <Tile v-for="panel in panels" :panel="panel" :key="panel.id" />
+    <Transition name="pop" mode="out-in">
+      <RestorePanel v-if="deleted.length" />
+    </Transition>
   </div>
 </template>
 
@@ -16,8 +16,8 @@ import RestorePanel from '@/components/RestorePanel.vue'
 @Component({
   name: 'Desktop',
   components: {
-    AppTile: Tile,
-    AppRestorePanel: RestorePanel
+    Tile,
+    RestorePanel
   }
 })
 export default class extends Vue {

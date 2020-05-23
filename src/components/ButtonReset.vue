@@ -1,13 +1,13 @@
 <template>
-  <el-button
+  <Button
     type="info"
     plain
     id="reset-button"
     title="Reset panels config"
-    @click="resetTiles"
+    @click="$store.dispatch('resetTilesConfig')"
   >
     Reset
-  </el-button>
+  </Button>
 </template>
 
 <script lang="ts">
@@ -16,14 +16,10 @@ import { Button } from 'element-ui'
 
 @Component({
   components: {
-    ElButton: Button
+    Button
   }
 })
-export default class extends Vue {
-  resetTiles(): void {
-    this.$store.dispatch('resetTilesConfig')
-  }
-}
+export default class extends Vue { }
 </script>
 
 <style scoped>

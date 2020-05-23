@@ -4,7 +4,7 @@ import { PANEL_WIDTH, PANEL_HEIGHT } from '@/core/config'
 export default (): Array<Panel> => ([
   {
     id: 1,
-    posX: 25,
+    posX: 20,
     posY: 60,
     width: PANEL_WIDTH,
     height: PANEL_HEIGHT,
@@ -13,7 +13,7 @@ export default (): Array<Panel> => ([
   },
   {
     id: 2,
-    posX: 350,
+    posX: 340,
     posY: 60,
     width: PANEL_WIDTH,
     height: PANEL_HEIGHT,
@@ -22,7 +22,7 @@ export default (): Array<Panel> => ([
   },
   {
     id: 3,
-    posX: 675,
+    posX: 660,
     posY: 60,
     width: PANEL_WIDTH,
     height: PANEL_HEIGHT,
@@ -31,7 +31,7 @@ export default (): Array<Panel> => ([
   },
   {
     id: 4,
-    posX: 25,
+    posX: 20,
     posY: 180,
     width: PANEL_WIDTH,
     height: PANEL_HEIGHT,
@@ -40,7 +40,7 @@ export default (): Array<Panel> => ([
   },
   {
     id: 5,
-    posX: 350,
+    posX: 340,
     posY: 180,
     width: PANEL_WIDTH,
     height: PANEL_HEIGHT,

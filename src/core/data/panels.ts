@@ -32,7 +32,7 @@ export default (): Array<Panel> => ([
   {
     id: 4,
     posX: 25,
-    posY: 185,
+    posY: 180,
     width: PANEL_WIDTH,
     height: PANEL_HEIGHT,
     zIndex: 0,
@@ -41,7 +41,7 @@ export default (): Array<Panel> => ([
   {
     id: 5,
     posX: 350,
-    posY: 185,
+    posY: 180,
     width: PANEL_WIDTH,
     height: PANEL_HEIGHT,
     zIndex: 0,

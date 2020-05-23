@@ -14,8 +14,7 @@ const {
   SAVE_PANEL_POSITION,
   SAVE_PANEL_SIZE,
   MOVE_TO_DELETED,
-  MOVE_FROM_DELETED,
-  RETURN_PANEL
+  MOVE_FROM_DELETED
 } = Type
 
 export const desktopModule = {
@@ -90,13 +89,6 @@ export const desktopModule = {
       restored.posY = getPageHeight() / 2 - PANEL_HEIGHT / 2
 
       state.panels.push(restored)
-    },
-    [RETURN_PANEL] (state: { panels: Panel[] }, id: number) {
-      const matched = state.panels.find((panel: { id: number }) => panel.id == id)
-      if (matched) {
-        matched.posX = getPageWidth() / 2 - PANEL_WIDTH / 2
-        matched.posY = getPageHeight() / 2 - PANEL_HEIGHT / 2
-      }
     }
   },
   actions: {
@@ -135,9 +127,6 @@ export const desktopModule = {
       store.commit(MOVE_FROM_DELETED, id)
       PanelsService.savePanels(store.state.panels)
       PanelsService.saveDeleted(store.state.deleted)
-    },
-    returnTile(store: { commit: (arg0: Type, arg1: number) => void }, id: number) {
-      store.commit(RETURN_PANEL, id)
     },
     resetTilesConfig(store: any) {
       PanelsService.clear()

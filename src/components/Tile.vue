@@ -158,12 +158,8 @@ export default class extends Vue {
     if (event.target.offsetLeft + shift.x < 0 || event.target.offsetTop + shift.y < 0) {
       return
     }
-    if (shift.x % DRAG_STEP == 0) {
-      event.target.style.left = this.panel.posX + shift.x + 'px'
-    }
-    if (shift.y % DRAG_STEP == 0) {
-      event.target.style.top = this.panel.posY + shift.y + 'px'
-    }
+    event.target.style.left = this.panel.posX + shift.x + 'px'
+    event.target.style.top = this.panel.posY + shift.y + 'px'
   }
 
   /**

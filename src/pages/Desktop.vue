@@ -1,5 +1,5 @@
 <template>
-  <div class="desktop">
+  <div class="desktop" @dragover.prevent>
     <Tile v-for="panel in panels" :panel="panel" :key="panel.id" />
     <Transition name="pop" mode="out-in">
       <RestorePanel v-if="deleted.length" />

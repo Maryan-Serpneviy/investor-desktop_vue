@@ -5,8 +5,8 @@ import { APP_PREFIX } from '@/core/config'
 const PANELS = `${APP_PREFIX}/panels`
 const DELETED = `${APP_PREFIX}/deleted`
 
-export class PanelsService {
-  static save(payload: Array<Panel>, storageKey: string) {
+class PanelsService {
+  save(payload: Array<Panel>, storageKey: string) {
     try {
       const serializedPanels = JSON.stringify(payload)
       window.localStorage.setItem(storageKey, serializedPanels)
@@ -15,15 +15,15 @@ export class PanelsService {
     }
   }
 
-  static savePanels(payload: Array<Panel>) {
+  savePanels(payload: Array<Panel>) {
     this.save(payload, PANELS)
   }
 
-  static saveDeleted(payload: Array<Panel>) {
+  saveDeleted(payload: Array<Panel>) {
     this.save(payload, DELETED)
   }
 
-  static loadPanels() {
+  loadPanels() {
     try {
       const serializedPanels = window.localStorage.getItem(PANELS)
       if (serializedPanels === null) {
@@ -35,7 +35,7 @@ export class PanelsService {
     }
   }
 
-  static loadDeleted() {
+  loadDeleted() {
     try {
       const serializedPanels = window.localStorage.getItem(DELETED)
       if (serializedPanels === null) {
@@ -47,7 +47,7 @@ export class PanelsService {
     }
   }
 
-  static clear() {
+  clear() {
     try {
       if (window.localStorage.getItem(PANELS)) {
         window.localStorage.removeItem(PANELS)
@@ -61,3 +61,5 @@ export class PanelsService {
     }
   }
 }
+
+export const panelsService = new PanelsService()

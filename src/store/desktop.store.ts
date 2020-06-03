@@ -1,4 +1,4 @@
-import { PanelsService } from '@/core/services/panels.service'
+import { panelsService } from '@/core/services/panels.service'
 import { Panel } from '@/types/interfaces'
 import { Type } from './mutation-types'
 import { PANEL_WIDTH, PANEL_HEIGHT } from '@/core/config'
@@ -30,10 +30,10 @@ export const desktopModule = {
   },
   mutations: {
     [LOAD_PANELS] (state: { panels: Panel[] }) {
-      state.panels = PanelsService.loadPanels()
+      state.panels = panelsService.loadPanels()
     },
     [LOAD_DELETED] (state: { deleted: Panel[] }) {
-      state.deleted = PanelsService.loadDeleted()
+      state.deleted = panelsService.loadDeleted()
     },
     [SHOW_ON_TOP] (state: { panels: Panel[] }, id: number) {
       const matched = state.panels.find((panel: { id: number }) => panel.id == id)
@@ -112,24 +112,24 @@ export const desktopModule = {
     },
     saveTileCoords(store: { commit: (arg0: string, payload: { id: number; x: number; y: number }) => void; state: { panels: Panel[] } }, payload: { id: number; x: number; y: number }) {
       store.commit(SAVE_PANEL_POSITION, payload)
-      PanelsService.savePanels(store.state.panels)
+      panelsService.savePanels(store.state.panels)
     },
     saveTileSize(store: { commit: (arg0: string, payload: { id: number; width: number; height: number }) => void; state: { panels: Panel[] } }, payload: { id: number; width: number; height: number }) {
       store.commit(SAVE_PANEL_SIZE, payload)
-      PanelsService.savePanels(store.state.panels)
+      panelsService.savePanels(store.state.panels)
     },
     removeTile(store: { commit: (arg0: string, id: number) => void; state: { panels: Panel[]; deleted: Panel[] } }, id: number) {
       store.commit(MOVE_TO_DELETED, id)
-      PanelsService.savePanels(store.state.panels)
-      PanelsService.saveDeleted(store.state.deleted)
+      panelsService.savePanels(store.state.panels)
+      panelsService.saveDeleted(store.state.deleted)
     },
     restoreTile(store: { commit: (arg0: string, id: number) => void; state: { panels: Panel[]; deleted: Panel[] } }, id: number) {
       store.commit(MOVE_FROM_DELETED, id)
-      PanelsService.savePanels(store.state.panels)
-      PanelsService.saveDeleted(store.state.deleted)
+      panelsService.savePanels(store.state.panels)
+      panelsService.saveDeleted(store.state.deleted)
     },
     resetTilesConfig(store: any) {
-      PanelsService.clear()
+      panelsService.clear()
     }
   }
 }
